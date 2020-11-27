@@ -5,11 +5,25 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
+//utility
 import { smallImage } from "../util";
+
+//svg images
+import apple from "../img/apple.svg";
+import gamepad from "../img/gamepad.svg";
+import playstation from "../img/playstation.svg";
+import steam from "../img/steam.svg";
+import nintendo from "../img/nintendo.svg";
+import xbox from "../img/xbox.svg";
+import starFull from "../img/star-full.png";
+import starEmpty from "../img/star-empty.png";
 
 const GameDetail = ({ pathId }) => {
   const history = useHistory();
-
+  //data
+  const { game, screenshots, isLoading } = useSelector(
+    (state) => state.gameDetail
+  );
   //Exit Deatil
   const exitDetailHandler = (e) => {
     const element = e.target;
@@ -19,10 +33,24 @@ const GameDetail = ({ pathId }) => {
     }
   };
 
-  //data
-  const { game, screenshots, isLoading } = useSelector(
-    (state) => state.gameDetail
-  );
+  //get platform images
+  const getPlatform = (platform) => {
+    switch (platform) {
+      case "PlayStation 4":
+        return playstation;
+      case "Xbox One":
+        return xbox;
+      case "PC":
+        return steam;
+      case "Nintendo Switch":
+        return nintendo;
+      case "iOS":
+        return apple;
+      default:
+        return gamepad;
+    }
+  };
+
   return (
     <>
       {!isLoading && (
@@ -37,7 +65,10 @@ const GameDetail = ({ pathId }) => {
                 <h3>Platforms</h3>
                 <Platforms className="platforms">
                   {game.platforms.map((data) => (
-                    <h3 key={data.platform.id}>{data.platform.name}</h3>
+                    <img
+                      key={data.platform.id}
+                      src={getPlatform(data.platform.name)}
+                    />
                   ))}
                 </Platforms>
               </Info>
@@ -76,6 +107,7 @@ const CardShadow = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 5;
   &::-webkit-scrollbar {
     width: 0.5rem;
   }
@@ -95,6 +127,7 @@ const Detail = styled(motion.div)`
   position: absolute;
   left: 20%;
   color: black;
+  z-index: 10;
   img {
     width: 100%;
   }
@@ -113,7 +146,7 @@ const Info = styled(motion.div)`
 const Platforms = styled(motion.div)`
   display: flex;
   justify-content: space-evenly;
-  h3 {
+  img {
     margin-left: 3rem;
   }
 `;
