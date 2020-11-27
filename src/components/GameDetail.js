@@ -3,8 +3,20 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 //redux
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const GameDetail = () => {
+  const history = useHistory();
+
+  //Exit Deatil
+  const exitDetailHandler = (e) => {
+    const element = e.target;
+    if (element.classList.contains("shadow")) {
+      document.body.style.overflow = "auto";
+      history.push("/");
+    }
+  };
+
   //data
   const { game, screenshots, isLoading } = useSelector(
     (state) => state.gameDetail
@@ -12,7 +24,7 @@ const GameDetail = () => {
   return (
     <>
       {!isLoading && (
-        <CardShadow>
+        <CardShadow className="shadow" onClick={exitDetailHandler}>
           <Detail>
             <Stats className="stats">
               <div className="rating">
@@ -71,7 +83,7 @@ const CardShadow = styled(motion.div)`
 
 const Detail = styled(motion.div)`
   width: 60%;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   padding: 2rem 5rem;
   background: white;
   position: absolute;
