@@ -38,7 +38,13 @@ const GlobalStyles = createGlobalStyle`
         color: #333;
     }
     img{
-        display:block
+        display:block;
+    }
+    input{
+        font-family: 'Cairo', sans-serif;
+    }
+    button{
+        font-family: 'Cairo', sans-serif;
     }
 `;
 
