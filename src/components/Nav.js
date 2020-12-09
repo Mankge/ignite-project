@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 import logo from "../img/logo.svg";
 //Redux and Routes
 import { fetchSearch } from "../actions/gamesAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fadeIn } from "../animations";
 //Font Awesome Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
+  const { searched } = useSelector((state) => state.games);
   let token;
   const dispatch = useDispatch();
   const [textInput, setTextInput] = useState("");
@@ -21,6 +22,7 @@ const Nav = () => {
     setTextInput(searchTerm);
     dispatch(fetchSearch(searchTerm, token));
   };
+
   const submitSearch = (e) => {
     e.preventDefault();
     let searchTerm = e.target.value;
@@ -46,12 +48,21 @@ const Nav = () => {
             onChange={inputHandler}
             value={textInput}
           />
-          <div className="autocomplete-box">
-            <li>Hi Mbongeni Mankge.</li>
-            <li>Hi Mbongeni Mankge.</li>
-            <li>Hi Mbongeni Mankge.</li>
-            <li>Hi Mbongeni Mankge.</li>
-            <li>Hi Mbongeni Mankge.</li>
+          <div
+            className={`autocomplete-box ${searched.length ? "active" : ""}`}
+          >
+            {/* List of suggestions inserted from javascript */}
+            {searched.length ? (
+              <div className="suggestions">
+                {searched.map((game) => (
+                  <li onClick={() => setTextInput(game.name)} key={game.id}>
+                    {game.name}
+                  </li>
+                ))}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="icon" onClick={submitSearch} type="submit">
             <FontAwesomeIcon icon={faSearch} />
@@ -97,12 +108,16 @@ const Search = styled(motion.form)`
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   }
   .autocomplete-box {
-    padding: 10px 8px;
+    padding: 0px;
     max-height: 280px;
-    overflow-y: auto;
+    overflow-y: hidden;
     opacity: 0;
     pointer-events: none;
-    display: none;
+  }
+  .active {
+    padding: 10px 8px;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .autocomplete-box li {

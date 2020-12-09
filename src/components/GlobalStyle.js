@@ -46,6 +46,9 @@ const GlobalStyles = createGlobalStyle`
     button{
         font-family: 'Cairo', sans-serif;
     }
+    li{
+        font-family: 'Cairo', sans-serif;
+    }
 `;
 
 export default GlobalStyles;
