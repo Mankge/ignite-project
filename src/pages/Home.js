@@ -2,6 +2,8 @@ import { useEffect } from "react";
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { loadGames } from "../actions/gamesAction";
+import { fadeIn } from "../animations";
+
 //components
 import Game from "../components/Game";
 import GameDetail from "../components/GameDetail";
@@ -23,7 +25,7 @@ const Home = () => {
     (state) => state.games
   );
   return (
-    <GameList>
+    <GameList variants={fadeIn} initial="hidden" animate="show">
       <AnimateSharedLayout type="crossfade">
         <AnimatePresence>
           {pathId && <GameDetail pathId={pathId} />}
