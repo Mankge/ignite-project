@@ -7,17 +7,24 @@ import logo from "../img/logo.svg";
 import { fetchSearch } from "../actions/gamesAction";
 import { useDispatch } from "react-redux";
 import { fadeIn } from "../animations";
+//Font Awesome Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
+  let token;
   const dispatch = useDispatch();
   const [textInput, setTextInput] = useState("");
 
   const inputHandler = (e) => {
-    setTextInput(e.target.value);
+    let searchTerm = e.target.value;
+    setTextInput(searchTerm);
+    dispatch(fetchSearch(searchTerm, token));
   };
   const submitSearch = (e) => {
     e.preventDefault();
-    dispatch(fetchSearch(textInput));
+    let searchTerm = e.target.value;
+    dispatch(fetchSearch(searchTerm));
     setTextInput("");
   };
   const clearSearch = () => {
@@ -30,19 +37,33 @@ const Nav = () => {
         <img src={logo} alt="ignite" />
         <h1>Ignite</h1>
       </Logo>
-      <Search className="search">
-        <input type="text" onChange={inputHandler} value={textInput} />
-        <button onClick={submitSearch} type="submit">
-          Search
-        </button>
-      </Search>
+      <Wrapper className="wrapper">
+        <Search autoComplete="off" className="search">
+          <input
+            id="searchInput"
+            placeholder="Type to Search"
+            type="text"
+            onChange={inputHandler}
+            value={textInput}
+          />
+          <div className="autocomplete-box">
+            <li>Hi Mbongeni Mankge.</li>
+            <li>Hi Mbongeni Mankge.</li>
+            <li>Hi Mbongeni Mankge.</li>
+            <li>Hi Mbongeni Mankge.</li>
+            <li>Hi Mbongeni Mankge.</li>
+          </div>
+          <div className="icon" onClick={submitSearch} type="submit">
+            <FontAwesomeIcon icon={faSearch} />
+          </div>
+        </Search>
+      </Wrapper>
     </StyledNav>
   );
 };
 
 const StyledNav = styled(motion.nav)`
   padding: 3rem 3rem;
-  text-align: center;
 `;
 const Logo = styled(motion.div)`
   display: flex;
@@ -56,16 +77,59 @@ const Logo = styled(motion.div)`
   }
 `;
 
+const Wrapper = styled(motion.div)`
+  max-width: 450px;
+  margin: 20px auto;
+`;
+
 const Search = styled(motion.form)`
+  width: 100%;
+  position: relative;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
   input {
     display: inline-block;
-    width: 30%;
+    width: 100%;
+    height: 55px;
     font-size: 1.3rem;
     padding: 10px 15px;
     border: none;
     outline: none;
-    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
   }
+  .autocomplete-box {
+    padding: 10px 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+  }
+
+  .autocomplete-box li {
+    list-style: none;
+    padding: 8px 12px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+
+  .autocomplete-box li:hover {
+    background: #efefef;
+  }
+
+  .icon {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 55px;
+    width: 55px;
+    text-align: center;
+    line-height: 55px;
+    font-size: 20px;
+    color: #ff7676;
+    cursor: pointer;
+  }
+
   button {
     display: inline-block;
     font-size: 1.3rem;
