@@ -32,7 +32,7 @@ const Home = () => {
         </AnimatePresence>
         {searched.length ? (
           <div className="searched">
-            <h2>Showing search results for:</h2>
+            <h2>Showing search results:</h2>
             <Games>
               {searched.map((game) => (
                 <Game
@@ -46,45 +46,45 @@ const Home = () => {
             </Games>
           </div>
         ) : (
-          ""
+          <div>
+            <h2>Upcoming Games</h2>
+            <Games>
+              {upcoming.map((game) => (
+                <Game
+                  name={game.name}
+                  released={game.released}
+                  id={game.id}
+                  image={game.background_image}
+                  key={game.id}
+                />
+              ))}
+            </Games>
+            <h2>Popular Games</h2>
+            <Games>
+              {popular.map((game) => (
+                <Game
+                  name={game.name}
+                  released={game.released}
+                  id={game.id}
+                  image={game.background_image}
+                  key={game.id}
+                />
+              ))}
+            </Games>
+            <h2>New Games</h2>
+            <Games>
+              {newGames.map((game) => (
+                <Game
+                  name={game.name}
+                  released={game.released}
+                  id={game.id}
+                  image={game.background_image}
+                  key={game.id}
+                />
+              ))}
+            </Games>
+          </div>
         )}
-
-        <h2>Upcoming Games</h2>
-        <Games>
-          {upcoming.map((game) => (
-            <Game
-              name={game.name}
-              released={game.released}
-              id={game.id}
-              image={game.background_image}
-              key={game.id}
-            />
-          ))}
-        </Games>
-        <h2>Popular Games</h2>
-        <Games>
-          {popular.map((game) => (
-            <Game
-              name={game.name}
-              released={game.released}
-              id={game.id}
-              image={game.background_image}
-              key={game.id}
-            />
-          ))}
-        </Games>
-        <h2>New Games</h2>
-        <Games>
-          {newGames.map((game) => (
-            <Game
-              name={game.name}
-              released={game.released}
-              id={game.id}
-              image={game.background_image}
-              key={game.id}
-            />
-          ))}
-        </Games>
       </AnimateSharedLayout>
     </GameList>
   );
@@ -103,6 +103,7 @@ const Games = styled(motion.div)`
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   grid-column-gap: 3rem;
   grid-row-gap: 4rem;
+  margin-bottom: 30px;
 `;
 
 export default Home;

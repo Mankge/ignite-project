@@ -21,12 +21,10 @@ export const loadGames = () => async (dispatch) => {
 };
 
 export const fetchSearch = (game_name, token) => async (dispath) => {
-  console.log(token);
   if (token) {
     token.cancel("Operation canceled due to new request.");
   }
   token = axios.CancelToken.source();
-  console.log(token);
   const searchGames = await axios.get(searchGameURL(game_name), {
     cancelToken: token.token,
   });
@@ -34,6 +32,22 @@ export const fetchSearch = (game_name, token) => async (dispath) => {
     type: "FETCH_SEARCHED",
     payload: {
       searched: searchGames.data.results,
+    },
+  });
+};
+
+export const fetchSearchSuggestions = (game_name, token) => async (dispath) => {
+  if (token) {
+    token.cancel("Operation canceled due to new request.");
+  }
+  token = axios.CancelToken.source();
+  const searchGames = await axios.get(searchGameURL(game_name), {
+    cancelToken: token.token,
+  });
+  dispath({
+    type: "FETCH_SEARCHED_SUGGESTIONS",
+    payload: {
+      searchedResults: searchGames.data.results,
     },
   });
 };

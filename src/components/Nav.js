@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import logo from "../img/logo.svg";
 //Redux and Routes
-import { fetchSearch } from "../actions/gamesAction";
+import { fetchSearch, fetchSearchSuggestions } from "../actions/gamesAction";
 import { useDispatch, useSelector } from "react-redux";
 import { fadeIn } from "../animations";
 //Font Awesome Icons
@@ -12,25 +12,36 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
-  const { searched } = useSelector((state) => state.games);
-  let token;
+  const { searchedResults } = useSelector((state) => state.games);
   const dispatch = useDispatch();
   const [textInput, setTextInput] = useState("");
+  const [suggestionBox, setSuggestionBox] = useState(false);
 
   const inputHandler = (e) => {
     let searchTerm = e.target.value;
     setTextInput(searchTerm);
-    dispatch(fetchSearch(searchTerm, token));
+    if (searchTerm) {
+      setSuggestionBox(true);
+      dispatch(fetchSearchSuggestions(searchTerm));
+    } else {
+      setSuggestionBox(false);
+      dispatch({ type: "CLEAR_SEARCHED_SUGGESTIONS" });
+    }
+  };
+
+  const suggestionHandler = (game_name) => {
+    setSuggestionBox(false);
+    setTextInput(game_name);
+    dispatch(fetchSearch(game_name));
   };
 
   const submitSearch = (e) => {
     e.preventDefault();
-    let searchTerm = e.target.value;
-    dispatch(fetchSearch(searchTerm));
-    setTextInput("");
+    dispatch(fetchSearch(textInput));
   };
   const clearSearch = () => {
     dispatch({ type: "CLEAR_SEARCHED" });
+    setTextInput("");
   };
 
   return (
@@ -48,22 +59,35 @@ const Nav = () => {
             onChange={inputHandler}
             value={textInput}
           />
-          <div
-            className={`autocomplete-box ${searched.length ? "active" : ""}`}
-          >
-            {/* List of suggestions inserted from javascript */}
-            {searched.length ? (
-              <div className="suggestions">
-                {searched.map((game) => (
-                  <li onClick={() => setTextInput(game.name)} key={game.id}>
-                    {game.name}
-                  </li>
-                ))}
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+          {suggestionBox ? (
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="show"
+              className={`autocomplete-box ${
+                searchedResults.length ? "active" : ""
+              }`}
+            >
+              {/* List of suggestions inserted from javascript */}
+              {searchedResults.length ? (
+                <div className="suggestions">
+                  {searchedResults.map((game) => (
+                    <li
+                      onClick={() => suggestionHandler(game.name)}
+                      key={game.id}
+                    >
+                      {game.name}
+                    </li>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
+            </motion.div>
+          ) : (
+            ""
+          )}
+
           <div className="icon" onClick={submitSearch} type="submit">
             <FontAwesomeIcon icon={faSearch} />
           </div>
@@ -115,7 +139,7 @@ const Search = styled(motion.form)`
     pointer-events: none;
   }
   .active {
-    padding: 10px 8px;
+    padding: 4px 4px 0px 4px;
     opacity: 1;
     pointer-events: auto;
   }
